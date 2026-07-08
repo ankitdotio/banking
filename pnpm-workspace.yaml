@@ -1,0 +1,5 @@
+allowBuilds:
+  argon2: false
+  esbuild: false
+minimumReleaseAgeExclude:
+  - '@types/node@26.0.0'

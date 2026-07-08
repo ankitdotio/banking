@@ -1,0 +1,5 @@
+export default {
+  SUCCESS: `THE OPERATION HAS BEEN SUCCESSFUL`,
+  SOMETHING_WENT_WRONG: `SOMETHING WENT WRONG`,
+  NOT_FOUND: (entity: string) => `${entity} NOT FOUND`,
+}
