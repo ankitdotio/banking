@@ -26,6 +26,12 @@ const userSchema = new mongoose.Schema<IUser, typeUserModel, IUserMethods>(
       minLength: [6, "PASSWORD SHOULD CONTAIN MORE THAN 6 CHARACTERS"],
       select: false,
     },
+    systemUser: {
+      type: Boolean,
+      default: false,
+      immutable: true,
+      select: false,
+    },
   },
   {
     timestamps: true,
@@ -46,9 +52,6 @@ userSchema.pre("save", async function () {
 userSchema.methods.comparePasswords = async function (
   password: string,
 ): Promise<boolean> {
-  console.log("Stored password:", this.password);
-  console.log("Type:", typeof this.password);
-
   return await argon2.verify(this.password, password);
 };
 

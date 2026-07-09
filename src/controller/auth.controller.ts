@@ -6,6 +6,7 @@ import httpError from "../util/httpError.js";
 import jwt from "jsonwebtoken";
 import config from "../config/config.js";
 import { loginSchema } from "../validation/userLogin.validation.js";
+import { sendRegistrationEmail } from "../services/email.service.js";
 
 /**
  * @POST - /api/auth/register
@@ -65,8 +66,8 @@ export const userRegisterController = async (
       },
     );
 
-    res.cookie("Token", token);
-    return httpResponse(req, res, 201, "USER SUCCESSFULLY CREATED", {
+    res.cookie("token", token);
+    httpResponse(req, res, 201, "USER SUCCESSFULLY CREATED", {
       user: {
         _id: user._id,
         username: user.username,
@@ -75,6 +76,7 @@ export const userRegisterController = async (
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       token,
     });
+    await sendRegistrationEmail(user.email, user.username);
   } catch (error) {
     return httpError(next, error, req, 400);
   }
@@ -135,8 +137,9 @@ export const userLoginController = async (
       },
     );
 
-    res.cookie("Token", token);
-    return httpResponse(req, res, 201, "USER SUCCESSFULLY LOGGED IN", {
+    res.cookie("token", token);
+
+    httpResponse(req, res, 201, "USER SUCCESSFULLY LOGGED IN", {
       user: {
         _id: user._id,
         username: user.username,

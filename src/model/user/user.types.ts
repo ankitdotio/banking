@@ -4,6 +4,7 @@ export interface IUser {
   username: string;
   password: string;
   email: string;
+  systemUser: boolean;
 }
 
 export interface IUserMethods {
