@@ -205,6 +205,9 @@ export const createTransactionController = async (
       { idempotencyKey: idempotencyKey },
       { status: "FAILED" },
     );
+    finally {
+    await session.endSession();
+}
 
     return httpResponse(
       req,
