@@ -18,6 +18,7 @@ import { rateLimiter } from "./middleware/rateLimiter.js";
 import { authRouter } from "./routes/auth.routes.js";
 import cookieParser from "cookie-parser";
 import { accountRouter } from "./routes/accounts.routes.js";
+import { transactionRouter } from "./routes/transaction.routes.js";
 
 export const app: Application = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -48,6 +49,7 @@ app.use(cookieParser());
 app.use("/api/v1", router);
 app.use("/api/auth/", authRouter);
 app.use("/api/accounts", accountRouter);
+app.use("/api/transaction", transactionRouter);
 //
 // 404 HANDLER
 //

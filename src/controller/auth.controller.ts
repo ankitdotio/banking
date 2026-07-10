@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 import config from "../config/config.js";
 import { loginSchema } from "../validation/userLogin.validation.js";
 import { sendRegistrationEmail } from "../services/email.service.js";
+import { tokenBlackListModel } from "../model/tokenBlacklist/tokenBlacklist.model.js";
 
 /**
  * @POST - /api/auth/register
@@ -139,7 +140,7 @@ export const userLoginController = async (
 
     res.cookie("token", token);
 
-    httpResponse(req, res, 201, "USER SUCCESSFULLY LOGGED IN", {
+    httpResponse(req, res, 200, "USER SUCCESSFULLY LOGGED IN", {
       user: {
         _id: user._id,
         username: user.username,
@@ -151,4 +152,23 @@ export const userLoginController = async (
   } catch (error) {
     return httpError(next, error, req, 400);
   }
+};
+
+/**
+ * @POST - /api/auth/logout
+ *
+ *
+ */
+export const userLogoutController = async (req: Request, res: Response) => {
+  const token =
+    (req.cookies.token as string) || req.headers.authorization?.split(" ")[1];
+
+  if (!token) {
+    return httpResponse(req, res, 200, "USER LOGGED OUT ");
+  }
+  await tokenBlackListModel.create({ token });
+
+  res.clearCookie("token");
+
+  return httpResponse(req, res, 200, "USER LOGGED OUT SUCCESSFULY");
 };

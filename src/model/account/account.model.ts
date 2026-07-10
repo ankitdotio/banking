@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { transactionModel } from "../transaction/transaction.model.js";
+import { ledgerModel } from "../ledger/ledger.model.js";
 
 const accountSchema = new mongoose.Schema(
   {
@@ -22,6 +23,12 @@ const accountSchema = new mongoose.Schema(
       required: true,
       default: "INR",
     },
+    systemUser: {
+      type: Boolean,
+      default: false,
+      immutable: true,
+      select: false,
+    },
   },
   {
     timestamps: true,
@@ -30,7 +37,7 @@ const accountSchema = new mongoose.Schema(
 
 accountSchema.index({ user: 1, status: 1 });
 accountSchema.methods.getBalance = async function () {
-  const balanceData = await transactionModel.aggregate([
+  const balanceData = await ledgerModel.aggregate([
     {
       $match: {
         account: this._id,
