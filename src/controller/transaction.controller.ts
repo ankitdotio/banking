@@ -119,9 +119,10 @@ export const createTransactionController = async (
   /**
    * create transaction
    */
+  let session: mongoose.ClientSession | null = null;
   let transaction;
   try {
-    const session = await mongoose.startSession();
+    session = await mongoose.startSession();
     session.startTransaction();
     logger.info("logger 1");
     transaction = (
@@ -205,9 +206,6 @@ export const createTransactionController = async (
       { idempotencyKey: idempotencyKey },
       { status: "FAILED" },
     );
-    finally {
-    await session.endSession();
-}
 
     return httpResponse(
       req,
@@ -216,6 +214,8 @@ export const createTransactionController = async (
       "TRANSACTION IS PENDING , PLEASE TRY AFTER SOME TIME",
       { error },
     );
+  } finally {
+    await session.endSession();
   }
 };
 
